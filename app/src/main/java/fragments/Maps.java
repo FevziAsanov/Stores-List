@@ -1,4 +1,4 @@
-package com.example.fevzi.storeslist;
+package fragments;
 
 
 import android.content.Intent;
@@ -7,13 +7,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import DB.DBAdapter;
+import helper_classes.Constants;
+import helper_classes.ListProduct;
+import model.Author;
+import model.Product;
+import com.example.fevzi.storeslist.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -24,10 +27,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import activities.DescriptionActivity;
+
 /**
  * Created by fevzi on 29.09.14.
  */
-public class Maps extends Fragment implements Helper {
+public class Maps extends Fragment implements ListProduct {
 
     private SupportMapFragment mapFragment;
 
@@ -35,7 +40,7 @@ public class Maps extends Fragment implements Helper {
     View   view;
     private Marker [] marker;
     private ArrayList<Product> products ;
-    private SQLHelper sqlHelper;
+    private DBAdapter sqlHelper;
     private SupportMapFragment fragment;
     private ArrayList<HashMap<Integer,Integer>> hashMaps = new ArrayList<HashMap<Integer, Integer>>();
    private static boolean h = false;
@@ -56,10 +61,10 @@ public class Maps extends Fragment implements Helper {
 
         mapFragment= (SupportMapFragment) fm.findFragmentById(R.id.map);
 
-        sqlHelper= new SQLHelper(getActivity());
+        sqlHelper= new DBAdapter(getActivity());
 
     //    new Picking(this,getActivity()).execute();
-       readingFromDB();
+        setList(sqlHelper.readingFromDB());
 
 
         return view;
@@ -67,10 +72,10 @@ public class Maps extends Fragment implements Helper {
 
     private void init() {
 
-        onClickTest();
+        setMarkers();
     }
 
-    public void onClickTest() {
+    public void setMarkers() {
             marker = new Marker[products.size()];
         for (int i = 0; i <products.size() ; i++) {
 
@@ -86,7 +91,7 @@ public class Maps extends Fragment implements Helper {
     }
 
     @Override
-    public void callback(List<Product> productList) {
+    public void setList(List<Product> productList) {
 
 
         products=(ArrayList<Product>)productList;
@@ -97,7 +102,8 @@ public class Maps extends Fragment implements Helper {
 
                 try {
 
-                    Thread.sleep(500);
+                    Thread.sleep(600);
+
 
                     map = mapFragment.getMap();
                     if(getActivity()!=null)
@@ -110,22 +116,8 @@ public class Maps extends Fragment implements Helper {
                             map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                                 @Override
                                 public void onInfoWindowClick(Marker marker) {
-                                    for (int i = 0; i <hashMaps.size() ; i++) {
 
-
-                                        if(hashMaps.get(i).get(Integer.getInteger(marker.getId()))!=null)
-                                        {
-                                            Intent intent = new Intent(getActivity(), DescriptionActivity.class);
-
-                                            intent.putExtra(Constants.NAME, products.get(i).getDescription());
-                                            startActivity(intent);
-                                            break;
-
-
-                                        }
-
-
-                                    }
+                                    transToDescActivity();
 
                                 }
                             });
@@ -143,6 +135,26 @@ public class Maps extends Fragment implements Helper {
     }
 
 
+public void  transToDescActivity()
+{
+    for (int i = 0; i <hashMaps.size() ; i++) {
+
+
+        if(hashMaps.get(i).get(Integer.getInteger(marker[i].getId()))!=null)
+        {
+            Intent intent = new Intent(getActivity(), DescriptionActivity.class);
+            String [] s = {products.get(i).getDescription(), products.get(i).getAuthor().getName(), products.get(i).getAuthor().getEmail()};
+            intent.putExtra(Constants.NAME, s);
+            startActivity(intent);
+            break;
+
+
+        }
+
+
+    }
+
+}
 
     @Override
     public void onDestroy() {
@@ -167,43 +179,7 @@ public class Maps extends Fragment implements Helper {
 
 
 
-    public void readingFromDB()
-    {
-        SQLiteDatabase db = sqlHelper.getWritableDatabase();
-        ArrayList<Product> products = new ArrayList<Product>();
-        Cursor c = db.query("Product",null, null, null, null, null, null);
 
-        if (c.moveToLast()) {
-
-            int  titleColIndex = c.getColumnIndex("title");
-            int  descColIndex = c.getColumnIndex("description");
-            do {
-                Product product = new Product();
-
-//               Log.d(LOG_TAG,
-//                                ", title = " + c.getString(titleColIndex) +
-//                                ", description = " + c.getString(descColIndex));
-
-                product.setTitle(c.getString(c.getColumnIndex("title")));
-                product.setDescription(c.getString(c.getColumnIndex("description")));
-                product.setId(c.getInt(c.getColumnIndex("id")));
-                product.setLat(c.getInt(c.getColumnIndex("lat")));
-                product.setLng(c.getInt(c.getColumnIndex("lng")));
-
-                products.add(product);
-
-            } while (c.moveToPrevious());
-        }
-
-        c.close();
-
-
-        callback(products);
-        db.close();
-
-
-
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

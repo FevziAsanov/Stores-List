@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="Creation of  shop"
+        android:layout_width="match_parent"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:layout_marginBottom="5dp"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/title"
+        android:hint="Enter title"
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/description"
+        android:hint="Enter description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btn"
+        android:onClick="onClick"
+        android:text="Enter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

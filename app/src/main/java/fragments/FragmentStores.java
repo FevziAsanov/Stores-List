@@ -1,9 +1,7 @@
-package com.example.fevzi.storeslist;
+package fragments;
 
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,17 +17,27 @@ import java.util.List;
 import java.util.Map;
 import  android.support.v4.app.Fragment;
 
-import static com.example.fevzi.storeslist.R.layout.*;
+import DB.DBAdapter;
+import WebRequests.Controller;
+import WebRequests.Parameters.GetProductsListParam;
+import WebRequests.WebClient;
+import helper_classes.Constants;
+import helper_classes.ListProduct;
+
+import model.Product;
+import com.example.fevzi.storeslist.R;
+
+import activities.DescriptionActivity;
+import model.ResultProduct;
 
 /**
  * Created by fevzi on 29.09.14.
  */
-public class FragmentStores extends Fragment implements Helper{
+public class FragmentStores extends Fragment implements ListProduct {
 
     private ListView listView;
     private List<Product> list = new ArrayList<Product>();
-    private SQLHelper sqlHelper;
-    final String LOG_TAG = "myLogsInFragment";
+    private DBAdapter sqlHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,31 +51,37 @@ public class FragmentStores extends Fragment implements Helper{
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         listView = (ListView)v.findViewById(R.id.list);
         Log.d("DDD","fragment");
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(getActivity(), DescriptionActivity.class);
 
-                intent.putExtra(Constants.NAME, list.get(i).getDescription());
+                String [] s  = {list.get(i).getDescription(), list.get(i).getAuthor().getName(), list.get(i).getAuthor().getEmail()};
+
+                intent.putExtra(Constants.NAME,s);
                 startActivity(intent);
             }
         });
 
 
-        sqlHelper= new SQLHelper(getActivity());
-        readingFromDB();
+        sqlHelper= new DBAdapter(getActivity());
 
-        new Picking(this,getActivity()).execute();
+        setList(sqlHelper.readingFromDB());
+    //   webClient = new WebClient(); //webClient.newInstance();
 
-        readingFromDB();
+       WebClient.callGetProducts(1,new Controller(getActivity()));
+      //  new Picking(this,getActivity()).execute();
+
+        setList(sqlHelper.readingFromDB());
 
 
         return v;
     }
 
     @Override
-    public void callback(final List<Product> productList) {
+    public void setList(final List<Product> productList) {
         if(getActivity()!=null)
         getActivity().runOnUiThread(new Runnable() {
 
@@ -77,6 +91,7 @@ public class FragmentStores extends Fragment implements Helper{
 
                 Log.d("Product"," "+productList.size());
                 for (int i = 0; i <productList.size() ; i++) {
+
                     s[i]=productList.get(i).getTitle();
 
 
@@ -93,6 +108,7 @@ public class FragmentStores extends Fragment implements Helper{
                 int[] to = { R.id.text};
 
                 SimpleAdapter sAdapter = new SimpleAdapter(getActivity(), data, R.layout.item,from, to);
+
                 list=productList;
 
 
@@ -101,41 +117,6 @@ public class FragmentStores extends Fragment implements Helper{
 
             }
         });
-
-    }
-
-    public void readingFromDB()
-    {
-        SQLiteDatabase db = sqlHelper.getWritableDatabase();
-        ArrayList<Product> products = new ArrayList<Product>();
-        Cursor c = db.query("Product",null, null, null, null, null, null);
-
-        if (c.moveToLast()) {
-
-            int  titleColIndex = c.getColumnIndex("title");
-            int  descColIndex = c.getColumnIndex("description");
-            do {
-                Product product = new Product();
-
-//               Log.d(LOG_TAG,
-//                                ", title = " + c.getString(titleColIndex) +
-//                                ", description = " + c.getString(descColIndex));
-
-                product.setTitle(c.getString(titleColIndex));
-                product.setDescription(c.getString(descColIndex));
-
-                products.add(product);
-
-            } while (c.moveToPrevious());
-        } else
-            Log.d(LOG_TAG, "0 rows");
-        c.close();
-
-
-        callback(products);
-        db.close();
-
-
 
     }
 

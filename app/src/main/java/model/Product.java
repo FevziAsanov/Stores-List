@@ -1,4 +1,4 @@
-package com.example.fevzi.storeslist;
+package model;
 
 /**
  * Created by fevzi on 30.09.14.
