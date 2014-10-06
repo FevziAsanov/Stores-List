@@ -1,11 +1,17 @@
 package WebRequests;
 
+import android.util.Log;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
@@ -13,12 +19,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 
+import WebRequests.Parameters.CreateNewProduct;
+import WebRequests.Parameters.CreateNewUser;
 import WebRequests.Parameters.GetProductsListParam;
 import WebRequests.Parameters.Parameter;
-import helper_classes.Listener;
+import helper_classes.WebClientListener;
+import model.Product;
 import model.ResultProduct;
+import model.User;
 
 /**
  * Created by fevzi on 03.10.14.
@@ -33,20 +42,36 @@ public class WebClient {
 
 
 
-    public static void callGetProducts(int page, Listener l) {
+    public static void callGetProducts(int page, WebClientListener l) {
         Parameter p = new GetProductsListParam(page);
 
         makeRequestAsync(p,l);
 
     }
 
-    private static void makeRequestAsync(final Parameter p, final Listener l) {
-         new Thread(new Runnable() {
+    public static  void callCreateNewProduct(Product product, WebClientListener l)
+    {
+        Parameter p = new CreateNewProduct(product);
+        makeRequestAsync(p,l);
+
+    }
+
+
+    public static void callCreateNewUser(User user, WebClientListener l)
+    {
+        Parameter p = new CreateNewUser(user);
+        makeRequestAsync(p,l);
+    }
+
+    private static void makeRequestAsync(final Parameter p, final WebClientListener l) {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     makeRequestSync(p, l);
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
             }
@@ -54,7 +79,7 @@ public class WebClient {
     }
 
 
-    private static   void makeRequestSync(Parameter p, Listener l ) throws JSONException {
+    private static   void makeRequestSync(Parameter p, WebClientListener l ) throws JSONException, UnsupportedEncodingException {
 
 
                   l.onResponse(p.parse(executeRequest(p)));
@@ -63,27 +88,30 @@ public class WebClient {
     }
 
 
+
+
     private static boolean save() {
 
         return false;
     }
 
-    public static String executeRequest(Parameter p) {
+    public static String executeRequest(Parameter p) throws UnsupportedEncodingException, JSONException {
         HttpRequestBase request = (HttpRequestBase) getRequest(p);
-        DefaultHttpClient httpClient = new DefaultHttpClient();
 
+        DefaultHttpClient httpClient = new DefaultHttpClient();
 
         InputStream stream;
         HttpResponse httpResponse = null;
         String json = null;
         try {
             httpResponse = httpClient.execute(request);
+            Log.d("code ", "" + httpResponse.getStatusLine().getStatusCode());
             HttpEntity httpEntity = httpResponse.getEntity();
             stream = httpEntity.getContent();
             BufferedReader reader = null;
             try {
                 reader = new BufferedReader(new InputStreamReader(
-                        stream, "iso-8859-1"), 8);
+                        stream, "UTF-8"), 8);
                 StringBuilder sb = new StringBuilder();
                 String line = null;
                 while ((line = reader.readLine()) != null) {
@@ -104,12 +132,20 @@ public class WebClient {
         return json;
     }
 
-    public static Object getRequest(Parameter p) {
+    public static Object getRequest(Parameter p) throws JSONException, UnsupportedEncodingException {
         switch (p.getMethod()) {
             case Get:
                 return new HttpGet(p.getRequestURL());
             case Post:
-                return new HttpPost();
+
+                HttpPost httpPost = new HttpPost(p.getRequestURL());
+                StringEntity stringEntity = new StringEntity(p.createJSON().toString());
+                httpPost.setHeader("Content-Type", "application/json");
+                httpPost.setEntity(stringEntity);
+
+                return httpPost;
+            case Delete:
+                return new HttpDelete();
         }
 
         return null;

@@ -18,6 +18,7 @@ public class CreateShop extends Activity implements View.OnClickListener {
 
     private EditText title, description;
     private Button enter;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +29,9 @@ public class CreateShop extends Activity implements View.OnClickListener {
         description = (EditText) findViewById(R.id.description);
 
         enter = (Button) findViewById(R.id.btn);
-
+        token=getIntent().getStringExtra(Constants.BUNDLE_KEY_CUR_FRAGMENT);
 
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -40,15 +39,13 @@ public class CreateShop extends Activity implements View.OnClickListener {
 
         if(title.getText().length()>0 && description.getText().length()>0) {
 
-            String s[] = { title.getText().toString(),description.getText().toString()};
+            String s[] = { title.getText().toString(),description.getText().toString(),token};
             Intent intent = new Intent(this, AddCoordinates.class);
             intent.putExtra(Constants.BUNDLE_KEY_CUR_FRAGMENT, s);
             startActivity(intent);
         }
       else
             Toast.makeText(this,"Not all fields are entered",Toast.LENGTH_LONG).show();
-
-
 
     }
 }

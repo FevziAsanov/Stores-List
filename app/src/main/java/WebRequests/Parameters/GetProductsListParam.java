@@ -1,6 +1,6 @@
 package WebRequests.Parameters;
 
-import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,8 +9,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import DB.DBAdapter;
-import WebRequests.WebClient;
 import helper_classes.Constants;
 import model.Author;
 import model.Product;
@@ -19,7 +17,7 @@ import model.ResultProduct;
 /**
  * Created by fevzi on 03.10.14.
  */
-public class GetProductsListParam extends Parameter<List<Product>> {
+public  class GetProductsListParam extends Parameter<ResultProduct> {
     int page;
      public GetProductsListParam( int page)
      {
@@ -27,9 +25,6 @@ public class GetProductsListParam extends Parameter<List<Product>> {
      }
     @Override
     public ResultProduct parse(String s) throws JSONException {
-
-
-
 
         ArrayList<Product> products = new ArrayList<Product>();
 
@@ -40,12 +35,10 @@ public class GetProductsListParam extends Parameter<List<Product>> {
                 jObj = new JSONObject(s);
                 JSONArray ja = jObj.getJSONArray("products");
                 JSONObject jo2 = jObj.getJSONObject("pagination");
-                int per_page;
 
-                     res_products.setTotal_page(jo2.getInt("total_page"));
-                per_page = jo2.getInt("per_page");
+                res_products.setTotal_page(jo2.getInt("total_page"));
 
-                for (int j = 0; j < per_page; j++) {
+                for (int j = 0; j < ja.length(); j++) {
 
 
                     ResultProduct res_product = new ResultProduct();
@@ -85,6 +78,11 @@ public class GetProductsListParam extends Parameter<List<Product>> {
     public Method getMethod() {
 
         return Method.Get;
+    }
+
+    @Override
+    public JSONObject createJSON() throws JSONException {
+        return null;
     }
 
     @Override

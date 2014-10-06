@@ -37,14 +37,9 @@ public class DBAdapter {
         db.close();
     }
 
-
     public void insert(ArrayList<Product> products)
     {
-
-
         SQLiteDatabase db = sqlHelper.getWritableDatabase();
-
-
 
         ContentValues cvAth = new ContentValues();
         ContentValues cvPr = new ContentValues();
@@ -68,19 +63,14 @@ public class DBAdapter {
             cvPr.put("author_ID", ref_auth);
 
             long rowID = db.insert("Author", null, cvAth);
-            //    Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 
             rowID = db.insert("Product", null, cvPr);
-            //       Log.d(LOG_TAG, "row inserted, ID = " + rowID);
         }
 
         db.close();
     }
     public List<Product> readingFromDB()
     {
-
-
-
         SQLiteDatabase db = sqlHelper.getWritableDatabase();
         ArrayList<Product> products = new ArrayList<Product>();
 
@@ -116,8 +106,6 @@ public class DBAdapter {
         } else
             Log.d(LOG_TAG, "0 rows");
         c.close();
-
-
 
         db.close();
 

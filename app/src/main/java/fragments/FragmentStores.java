@@ -18,8 +18,7 @@ import java.util.Map;
 import  android.support.v4.app.Fragment;
 
 import DB.DBAdapter;
-import WebRequests.Controller;
-import WebRequests.Parameters.GetProductsListParam;
+import WebRequests.ControllerForProduct;
 import WebRequests.WebClient;
 import helper_classes.Constants;
 import helper_classes.ListProduct;
@@ -28,7 +27,6 @@ import model.Product;
 import com.example.fevzi.storeslist.R;
 
 import activities.DescriptionActivity;
-import model.ResultProduct;
 
 /**
  * Created by fevzi on 29.09.14.
@@ -44,13 +42,11 @@ public class FragmentStores extends Fragment implements ListProduct {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         listView = (ListView)v.findViewById(R.id.list);
-        Log.d("DDD","fragment");
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -65,17 +61,13 @@ public class FragmentStores extends Fragment implements ListProduct {
             }
         });
 
-
         sqlHelper= new DBAdapter(getActivity());
 
         setList(sqlHelper.readingFromDB());
-    //   webClient = new WebClient(); //webClient.newInstance();
 
-       WebClient.callGetProducts(1,new Controller(getActivity()));
-      //  new Picking(this,getActivity()).execute();
+        WebClient.callGetProducts(1,new ControllerForProduct(getActivity()));
 
         setList(sqlHelper.readingFromDB());
-
 
         return v;
     }
@@ -110,7 +102,6 @@ public class FragmentStores extends Fragment implements ListProduct {
                 SimpleAdapter sAdapter = new SimpleAdapter(getActivity(), data, R.layout.item,from, to);
 
                 list=productList;
-
 
                 listView.setAdapter(sAdapter);
                 sAdapter.notifyDataSetChanged();

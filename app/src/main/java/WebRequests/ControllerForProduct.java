@@ -6,20 +6,20 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import DB.DBAdapter;
-import helper_classes.Listener;
+import helper_classes.WebClientListener;
 import model.Product;
 import model.ResultProduct;
 
 /**
  * Created by fevzi on 03.10.14.
  */
-public class Controller implements Listener {
+public class ControllerForProduct implements WebClientListener<ResultProduct> {
     private  WebClient webClient = new WebClient();
     ArrayList<Product> resultProducts = new ArrayList<Product>();
-    private int page =0;
+    private int page=1 ;
     private DBAdapter dbAdapter;
 
-    public Controller(Context  context)
+    public ControllerForProduct(Context context)
     {
         dbAdapter = new DBAdapter(context);
     }
@@ -27,7 +27,9 @@ public class Controller implements Listener {
     public void onResponse(ResultProduct resultProduct) {
 
         resultProducts.addAll(resultProduct.getProducts());
+
         if(resultProduct.getTotal_page()<=page) {
+
             dbAdapter.deleteAll();
             dbAdapter.insert(resultProducts);
 

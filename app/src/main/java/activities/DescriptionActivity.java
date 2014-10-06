@@ -23,6 +23,5 @@ public class DescriptionActivity extends Activity {
         ((TextView)findViewById(R.id.dscrpt)).setText(fName[0]);
         ((TextView)findViewById(R.id.author)).setText("Author:  \n"+ fName[1]  + "\n" + fName[2]);
 
-
     }
 }

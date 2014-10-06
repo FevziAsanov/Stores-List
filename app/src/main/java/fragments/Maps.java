@@ -37,11 +37,9 @@ public class Maps extends Fragment implements ListProduct {
     private SupportMapFragment mapFragment;
 
     private GoogleMap map;
-    View   view;
     private Marker [] marker;
     private ArrayList<Product> products ;
     private DBAdapter sqlHelper;
-    private SupportMapFragment fragment;
     private ArrayList<HashMap<Integer,Integer>> hashMaps = new ArrayList<HashMap<Integer, Integer>>();
    private static boolean h = false;
 
@@ -53,17 +51,14 @@ public class Maps extends Fragment implements ListProduct {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.map_fragment, container, false);
 
-
-         view = inflater.inflate(R.layout.map_fragment, container, false);
-
-         FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getFragmentManager();
 
         mapFragment= (SupportMapFragment) fm.findFragmentById(R.id.map);
 
         sqlHelper= new DBAdapter(getActivity());
 
-    //    new Picking(this,getActivity()).execute();
         setList(sqlHelper.readingFromDB());
 
 
@@ -131,14 +126,11 @@ public class Maps extends Fragment implements ListProduct {
             }
         }).start();
 
-
     }
-
 
 public void  transToDescActivity()
 {
     for (int i = 0; i <hashMaps.size() ; i++) {
-
 
         if(hashMaps.get(i).get(Integer.getInteger(marker[i].getId()))!=null)
         {
@@ -147,15 +139,11 @@ public void  transToDescActivity()
             intent.putExtra(Constants.NAME, s);
             startActivity(intent);
             break;
-
-
         }
-
 
     }
 
 }
-
     @Override
     public void onDestroy() {
 
@@ -163,24 +151,8 @@ public void  transToDescActivity()
         if (fragment.isResumed()) {
             getFragmentManager().beginTransaction().remove(fragment).commit();
         }
-
-
         super.onDestroy();
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

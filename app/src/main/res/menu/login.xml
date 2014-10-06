@@ -4,9 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/item1"
+        android:id="@+id/add"
         android:showAsAction="always"
-        android:title="Add a shop">
+        android:title="Create new user">
     </item>
+
 
 </menu>
