@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 import  android.support.v4.app.Fragment;
 
-import DB.DBAdapter;
-import WebRequests.ControllerForProduct;
-import WebRequests.WebClient;
+import db.DBAdapter;
+import web_requests.ControllerForProduct;
+import web_requests.WebClient;
 import helper_classes.Constants;
 import helper_classes.ListProduct;
 
@@ -35,7 +35,7 @@ public class FragmentStores extends Fragment implements ListProduct {
 
     private ListView listView;
     private List<Product> list = new ArrayList<Product>();
-    private DBAdapter sqlHelper;
+    private DBAdapter dbAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,20 +54,20 @@ public class FragmentStores extends Fragment implements ListProduct {
 
                 Intent intent = new Intent(getActivity(), DescriptionActivity.class);
 
-                String [] s  = {list.get(i).getDescription(), list.get(i).getAuthor().getName(), list.get(i).getAuthor().getEmail()};
-
-                intent.putExtra(Constants.NAME,s);
+                int id  = list.get(i).getId();
+                Log.d("id fragment",id+" ");
+                intent.putExtra(Constants.NAME,id);
                 startActivity(intent);
             }
         });
 
-        sqlHelper= new DBAdapter(getActivity());
+        dbAdapter = new DBAdapter(getActivity());
 
-        setList(sqlHelper.readingFromDB());
+        setList(dbAdapter.getAllProducts());
 
         WebClient.callGetProducts(1,new ControllerForProduct(getActivity()));
 
-        setList(sqlHelper.readingFromDB());
+        setList(dbAdapter.getAllProducts());
 
         return v;
     }
@@ -85,7 +85,6 @@ public class FragmentStores extends Fragment implements ListProduct {
                 for (int i = 0; i <productList.size() ; i++) {
 
                     s[i]=productList.get(i).getTitle();
-
 
                 }
                 ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>(

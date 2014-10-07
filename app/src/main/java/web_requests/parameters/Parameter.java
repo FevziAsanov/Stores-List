@@ -1,10 +1,7 @@
-package WebRequests.Parameters;
+package web_requests.parameters;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import DB.DBAdapter;
-import model.ResultProduct;
 
 /**
  * Created by fevzi on 03.10.14.

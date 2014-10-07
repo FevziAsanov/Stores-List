@@ -1,11 +1,10 @@
-package WebRequests.Parameters;
+package web_requests.parameters;
 
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import model.ResultProduct;
 import model.User;
 
 /**

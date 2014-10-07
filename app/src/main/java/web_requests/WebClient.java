@@ -1,4 +1,4 @@
-package WebRequests;
+package web_requests;
 
 import android.util.Log;
 
@@ -10,8 +10,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 
 import java.io.BufferedReader;
@@ -20,13 +18,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
-import WebRequests.Parameters.CreateNewProduct;
-import WebRequests.Parameters.CreateNewUser;
-import WebRequests.Parameters.GetProductsListParam;
-import WebRequests.Parameters.Parameter;
+import web_requests.parameters.CreateNewProduct;
+import web_requests.parameters.CreateNewUser;
+import web_requests.parameters.GetProductsListParam;
+import web_requests.parameters.Parameter;
 import helper_classes.WebClientListener;
 import model.Product;
-import model.ResultProduct;
 import model.User;
 
 /**

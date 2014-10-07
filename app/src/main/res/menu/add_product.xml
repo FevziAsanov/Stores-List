@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
         <item
-            android:id="@+id/add"
-            android:showAsAction="always"
-            android:title="Add a product">
+            android:id="@+id/addProduct"
+            android:showAsAction="ifRoom"
+            android:title="Add a product"
+           >
         </item>
 </menu>

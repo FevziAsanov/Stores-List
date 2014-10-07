@@ -1,4 +1,4 @@
-package WebRequests.Parameters;
+package web_requests.parameters;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -2,8 +2,6 @@ package fragments;
 
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,10 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import DB.DBAdapter;
+import db.DBAdapter;
 import helper_classes.Constants;
 import helper_classes.ListProduct;
-import model.Author;
 import model.Product;
 import com.example.fevzi.storeslist.R;
 import com.google.android.gms.maps.GoogleMap;
@@ -59,7 +56,7 @@ public class Maps extends Fragment implements ListProduct {
 
         sqlHelper= new DBAdapter(getActivity());
 
-        setList(sqlHelper.readingFromDB());
+        setList(sqlHelper.getAllProducts());
 
 
         return view;
@@ -135,8 +132,8 @@ public void  transToDescActivity()
         if(hashMaps.get(i).get(Integer.getInteger(marker[i].getId()))!=null)
         {
             Intent intent = new Intent(getActivity(), DescriptionActivity.class);
-            String [] s = {products.get(i).getDescription(), products.get(i).getAuthor().getName(), products.get(i).getAuthor().getEmail()};
-            intent.putExtra(Constants.NAME, s);
+            int id = products.get(i).getId();
+            intent.putExtra(Constants.NAME, id);
             startActivity(intent);
             break;
         }

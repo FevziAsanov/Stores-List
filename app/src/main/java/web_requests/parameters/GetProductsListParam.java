@@ -1,13 +1,10 @@
-package WebRequests.Parameters;
-
-import android.util.Log;
+package web_requests.parameters;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import helper_classes.Constants;
 import model.Author;

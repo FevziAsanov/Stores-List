@@ -1,11 +1,10 @@
-package WebRequests;
+package web_requests;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 
-import DB.DBAdapter;
+import db.DBAdapter;
 import helper_classes.WebClientListener;
 import model.Product;
 import model.ResultProduct;
@@ -31,7 +30,7 @@ public class ControllerForProduct implements WebClientListener<ResultProduct> {
         if(resultProduct.getTotal_page()<=page) {
 
             dbAdapter.deleteAll();
-            dbAdapter.insert(resultProducts);
+            dbAdapter.insertProducts(resultProducts);
 
             return;
         }

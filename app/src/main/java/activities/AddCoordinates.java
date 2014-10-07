@@ -6,9 +6,8 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import WebRequests.WebClient;
+import web_requests.WebClient;
 import helper_classes.Constants;
 import helper_classes.WebClientListener;
 import model.Author;
@@ -56,8 +55,6 @@ public class AddCoordinates extends FragmentActivity{
 
                     latitude=  marker.getPosition().latitude;
                     longitude=marker.getPosition().longitude;
-                //    Log.d("longD", " "+longitude);
-                 //   Log.d("latD"," " +  latitude);
                 }
 
                 @Override
@@ -66,8 +63,6 @@ public class AddCoordinates extends FragmentActivity{
 
                     latitude=  marker.getPosition().latitude;
                     longitude=marker.getPosition().longitude;
-                 //   Log.d("longE", " "+longitude);
-                   // Log.d("laEt"," " +  latitude);
                 }
             });
 
@@ -100,9 +95,7 @@ public class AddCoordinates extends FragmentActivity{
 
         Product p  =  new Product();
 
-        p.setTitle(shop[0]);
-       // Log.d("long", " "+(int)longitude);
-      //  Log.d("lat"," " +  (int)latitude);
+        p.setTitle(shop[0]);;
         p.setLng((int) longitude);
         p.setLat((int) latitude);
         p.setDescription(shop[1]);
