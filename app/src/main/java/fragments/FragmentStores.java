@@ -1,6 +1,9 @@
 package fragments;
 
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,7 +58,7 @@ public class FragmentStores extends Fragment implements ListProduct {
                 Intent intent = new Intent(getActivity(), DescriptionActivity.class);
 
                 int id  = list.get(i).getId();
-                Log.d("id fragment",id+" ");
+
                 intent.putExtra(Constants.NAME,id);
                 startActivity(intent);
             }
@@ -65,9 +68,9 @@ public class FragmentStores extends Fragment implements ListProduct {
 
         setList(dbAdapter.getAllProducts());
 
-        WebClient.callGetProducts(1,new ControllerForProduct(getActivity()));
+        WebClient.callGetProducts(1,new ControllerForProduct(getActivity(),this));
 
-        setList(dbAdapter.getAllProducts());
+        //setList(dbAdapter.getAllProducts());
 
         return v;
     }

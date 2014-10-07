@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import helper_classes.Constants;
 import model.User;
 
 /**
@@ -47,7 +48,7 @@ public class CreateNewUser extends Parameter<String>{
 
     @Override
     public String getRequestURL() {
-        return "http://protected-wave-2984.herokuapp.com/api/create_user.json" ;
+        return Constants.URL+"create_user.json" ;
     }
 
     @Override

@@ -7,7 +7,7 @@ package activities;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+
 import android.support.v7.app.ActionBarActivity;
 
 import android.view.Menu;
@@ -47,14 +47,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         actionBar.addTab(tab2);
 
     }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.login,menu);
-        MenuItem shareMenuItem = menu.findItem(R.id.createUser);
-        shareMenuItem.setVisible(true);
-
-
         return true;
     }
 

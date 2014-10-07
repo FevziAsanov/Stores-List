@@ -3,6 +3,7 @@ package web_requests.parameters;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import helper_classes.Constants;
 import model.Product;
 
 /**
@@ -43,7 +44,7 @@ public class CreateNewProduct extends Parameter<String> {
 
     @Override
     public String getRequestURL() {
-        return "http://protected-wave-2984.herokuapp.com/api/create_product.json";
+        return Constants.URL+"create_product.json";
     }
 
     @Override

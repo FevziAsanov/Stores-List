@@ -28,7 +28,7 @@ public class AddCoordinates extends FragmentActivity{
     private SupportMapFragment mapFragment;
     private GoogleMap map;
     private Marker marker;
-    private  String [] shop;
+    private  String [] product;
     private  double latitude ,longitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class AddCoordinates extends FragmentActivity{
 
         Intent intent = getIntent();
 
-        shop = intent.getStringArrayExtra(Constants.BUNDLE_KEY_CUR_FRAGMENT);
+        product = intent.getStringArrayExtra(Constants.BUNDLE_KEY_CUR_FRAGMENT);
 
         try {
             Thread.sleep(600);
@@ -82,7 +82,7 @@ public class AddCoordinates extends FragmentActivity{
     public void inits()
     {
 
-        marker = map.addMarker(new MarkerOptions().position(new LatLng(0,0)).title(shop[0]));
+        marker = map.addMarker(new MarkerOptions().position(new LatLng(0,0)).title(product[0]));
         marker.setDraggable(true);
 
     }
@@ -95,13 +95,13 @@ public class AddCoordinates extends FragmentActivity{
 
         Product p  =  new Product();
 
-        p.setTitle(shop[0]);;
+        p.setTitle(product[0]);
         p.setLng((int) longitude);
         p.setLat((int) latitude);
-        p.setDescription(shop[1]);
+        p.setDescription(product[1]);
         p.setAvatar(null);
         Author a =  new Author();
-        a.setToken(shop[2]);
+        a.setToken(product[2]);
         p.setAuthor(a);
 
 

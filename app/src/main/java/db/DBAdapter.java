@@ -146,7 +146,6 @@ public class DBAdapter {
                 s[0] = c.getString(c.getColumnIndex(TableConstants.DESCRIPTION));
                 author_id = c.getInt(c.getColumnIndex(TableConstants.AUTHOR_ID));
 
-                Log.d(LOG_TAG+" s ",s[0] + " " + author_id);
             } while (c.moveToPrevious());
         }
         else Log.d(LOG_TAG, "rows 0");
@@ -163,8 +162,6 @@ public class DBAdapter {
             do {
                 s[1] = c1.getString(c1.getColumnIndex(TableConstants.NAME));
                 s[2] = c1.getString(c1.getColumnIndex(TableConstants.EMAIL));
-
-                Log.d(LOG_TAG+" s ",s[1] + " "+s[2]);
 
             } while (c1.moveToPrevious());
         }

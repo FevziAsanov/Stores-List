@@ -25,10 +25,10 @@ public class DescriptionActivity extends Activity {
         dbAdapter = new DBAdapter(this);
 
         int id = intent.getIntExtra(Constants.NAME,1);
-        Log.d("id ",id+" ");
+
         String [] s ;
         s =dbAdapter.getDescription(id);
-        Log.d("Desc ",s[0]);
+
         ((TextView)findViewById(R.id.dscrpt)).setText(s[0]);
         ((TextView)findViewById(R.id.author)).setText("Author:  \n"+ s[1]  + "\n" + s[2]);
 

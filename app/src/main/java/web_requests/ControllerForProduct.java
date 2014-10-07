@@ -1,10 +1,15 @@
 package web_requests;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 
 import java.util.ArrayList;
 
 import db.DBAdapter;
+import fragments.FragmentStores;
+import helper_classes.ListProduct;
 import helper_classes.WebClientListener;
 import model.Product;
 import model.ResultProduct;
@@ -14,13 +19,26 @@ import model.ResultProduct;
  */
 public class ControllerForProduct implements WebClientListener<ResultProduct> {
     private  WebClient webClient = new WebClient();
-    ArrayList<Product> resultProducts = new ArrayList<Product>();
+    private ArrayList<Product> resultProducts = new ArrayList<Product>();
     private int page=1 ;
     private DBAdapter dbAdapter;
-
-    public ControllerForProduct(Context context)
+    private ProgressDialog dialog;
+    private  FragmentStores fragmentStores;
+    public ControllerForProduct(Context context, FragmentStores fragmentStores)
     {
         dbAdapter = new DBAdapter(context);
+        this.fragmentStores = fragmentStores;
+        dialog = new ProgressDialog(context);
+        dialog.setTitle("attention");
+        dialog.setMessage("updating stores");
+
+        dialog.setButton(Dialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        if(dbAdapter.getAllProducts().size()==0) {
+            dialog.show();
+        }
     }
     @Override
     public void onResponse(ResultProduct resultProduct) {
@@ -31,7 +49,8 @@ public class ControllerForProduct implements WebClientListener<ResultProduct> {
 
             dbAdapter.deleteAll();
             dbAdapter.insertProducts(resultProducts);
-
+            fragmentStores.setList(resultProducts);
+            dialog.dismiss();
             return;
         }
         else {
