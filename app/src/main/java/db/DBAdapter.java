@@ -105,9 +105,9 @@ public class DBAdapter {
                 Product product = new Product();
                 Author author = new Author();
 
-                Log.d(LOG_TAG,
-                        ", " +TableConstants.TITLE+" = " + c.getString(titleColIndex) +
-                                "," +TableConstants.DESCRIPTION+" = " + c.getString(descColIndex));
+//                Log.d(LOG_TAG,
+//                        ", " +TableConstants.TITLE+" = " + c.getString(titleColIndex) +
+//                                "," +TableConstants.DESCRIPTION+" = " + c.getString(descColIndex));
 
                 product.setTitle(c.getString(titleColIndex));
                 product.setId(c.getInt(c.getColumnIndex(TableConstants.ID)));

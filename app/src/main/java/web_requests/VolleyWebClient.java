@@ -1,16 +1,22 @@
 package web_requests;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
+import android.content.Context;
+import android.util.Log;
 
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import helper_classes.WebClientListener;
 import model.Product;
@@ -26,74 +32,89 @@ import web_requests.parameters.Parameter;
 
 public class VolleyWebClient {
 
-    public static void callGetProducts(int page, WebClientListener l) {
+
+    public static void callGetProducts(int page, WebClientListener l, Context c) throws JSONException, UnsupportedEncodingException {
         Parameter p = new GetProductsListParam(page);
-
-        makeRequestAsync(p,l);
+        executeRequest(p, c, l);
 
     }
 
-    public static  void callCreateNewProduct(Product product, WebClientListener l)
-    {
+    public static void callCreateNewProduct(Product product, WebClientListener l, Context c) throws JSONException, UnsupportedEncodingException {
         Parameter p = new CreateNewProduct(product);
-        makeRequestAsync(p,l);
-
+        executeRequest(p, c, l);
     }
 
 
-    public static void callCreateNewUser(User user, WebClientListener l)
-    {
+    public static void callCreateNewUser(User user, WebClientListener l, Context c) throws JSONException, UnsupportedEncodingException {
         Parameter p = new CreateNewUser(user);
-        makeRequestAsync(p,l);
+        executeRequest(p, c, l);
     }
 
-    private static void makeRequestAsync(final Parameter p, final WebClientListener l) {
-        new Thread(new Runnable() {
+
+    public static void executeRequest(final Parameter p, Context c, final WebClientListener l) throws UnsupportedEncodingException, JSONException {
+
+        RequestQueue requestQueue = Volley.newRequestQueue(c);
+
+        Response.Listener<JSONObject> a = new Response.Listener<JSONObject>() {
+
             @Override
-            public void run() {
+            public void onResponse(JSONObject jsonObject) {
                 try {
-                    makeRequestSync(p, l);
+                    l.onResponse(p.parse(jsonObject.toString()));
+
                 } catch (JSONException e) {
                     e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
                 }
+
+
             }
-        }).start();
+
+        };
+
+
+         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(getRequest(p), p.getRequestURL(), getJSONObject(p), a, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        }) {
+
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+
+
+        };
+        requestQueue.add(jsonObjectRequest);
+
     }
 
 
-    private static   void makeRequestSync(Parameter p, WebClientListener l ) throws JSONException, UnsupportedEncodingException {
-
-
-        l.onResponse(p.parse(executeRequest(p)));
-
-
-    }
-    public static String executeRequest(Parameter p){
-
-        return null;
-    }
-
-
-    public static Object getRequest(Parameter p) throws JSONException, UnsupportedEncodingException {
+    public static int getRequest(Parameter p) throws JSONException, UnsupportedEncodingException {
         switch (p.getMethod()) {
             case Get:
-                return new HttpGet(p.getRequestURL());
+                return Request.Method.GET;
             case Post:
-
-                HttpPost httpPost = new HttpPost(p.getRequestURL());
-                StringEntity stringEntity = new StringEntity(p.createJSON().toString());
-                httpPost.setHeader("Content-Type", "application/json");
-                httpPost.setEntity(stringEntity);
-
-                return httpPost;
+                return Request.Method.POST;
             case Delete:
-                return new HttpDelete();
+                return Request.Method.DELETE;
         }
 
-        return null;
+        return 0;
 
+    }
+
+    private static JSONObject getJSONObject(Parameter p) throws JSONException, UnsupportedEncodingException {
+        JSONObject jsonObject = null;
+        if(getRequest(p)==Request.Method.POST)
+        {
+            jsonObject= new JSONObject(p.createJSON().toString());
+        }
+        return  jsonObject;
     }
 
 

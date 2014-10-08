@@ -98,6 +98,7 @@ public class WebClient {
         HttpResponse httpResponse = null;
         String json = null;
         try {
+
             httpResponse = httpClient.execute(request);
             Log.d("code ", "" + httpResponse.getStatusLine().getStatusCode());
             HttpEntity httpEntity = httpResponse.getEntity();

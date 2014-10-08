@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import web_requests.VolleyWebClient;
 import web_requests.WebClient;
 import helper_classes.Constants;
 import helper_classes.WebClientListener;
@@ -19,6 +20,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by fevzi on 02.10.14.
@@ -90,9 +95,6 @@ public class AddCoordinates extends FragmentActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-
-
-
         Product p  =  new Product();
 
         p.setTitle(product[0]);
@@ -105,14 +107,27 @@ public class AddCoordinates extends FragmentActivity{
         p.setAuthor(a);
 
 
-        WebClient.callCreateNewProduct(p,new WebClientListener<String>() {
-            @Override
-            public void onResponse(String p) {
-           // Toast.makeText(getApplicationContext(),"Product created",Toast.LENGTH_LONG).show();
+//        WebClient.callCreateNewProduct(p,new WebClientListener<String>() {
+//            @Override
+//            public void onResponse(String p) {
+//           // Toast.makeText(getApplicationContext(),"Product created",Toast.LENGTH_LONG).show();
+//
+//
+//            }
+//        });
+        try {
+            VolleyWebClient.callCreateNewProduct(p,new WebClientListener<String>() {
 
-                Log.d("JSON", " "  + p);
-            }
-        });
+                @Override
+                public void onResponse(String p) {
+                    Log.d("JSON", " "  + p);
+                }
+            },this);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         return super.onOptionsItemSelected(item);
     }

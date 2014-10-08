@@ -4,6 +4,7 @@ package activities;
 
 
 
+import android.net.UrlQuerySanitizer;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ import fragments.Login;
 import helper_classes.Constants;
 import fragments.FragmentStores;
 import fragments.Maps;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.fevzi.storeslist.R;
 
 
@@ -53,7 +57,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.login,menu);
+        getMenuInflater().inflate(R.menu.login, menu);
         return true;
     }
 

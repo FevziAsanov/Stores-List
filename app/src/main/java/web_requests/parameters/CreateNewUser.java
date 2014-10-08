@@ -13,7 +13,7 @@ import model.User;
  */
 public class CreateNewUser extends Parameter<String>{
 
-   private   User user;
+   public    User user;
     public  CreateNewUser(User user)
     {
         this.user= user;
@@ -24,15 +24,13 @@ public class CreateNewUser extends Parameter<String>{
         JSONObject  jsonObject =  new JSONObject(s);
         String token=null;
 
-        JSONObject jsonObject1 = jsonObject.getJSONObject("user");
-        if(jsonObject1.getBoolean("success"))
-        {
-           token= jsonObject1.getString("token");
-           return  token;
-        }
-        else
+            JSONObject jsonObject1 = jsonObject.getJSONObject("user");
+            if (jsonObject1.getBoolean("success")) {
+                token = jsonObject1.getString("token");
+                return token;
+            } else
 
-        return token ;
+                return token;
     }
 
   public JSONObject createJSON() throws JSONException {

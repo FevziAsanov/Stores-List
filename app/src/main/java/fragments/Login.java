@@ -13,6 +13,11 @@ import android.widget.Toast;
 
 import com.example.fevzi.storeslist.R;
 
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
+
+import web_requests.VolleyWebClient;
 import web_requests.WebClient;
 import activities.CreateShop;
 import helper_classes.Constants;
@@ -28,8 +33,6 @@ public class Login extends DialogFragment implements  View.OnClickListener {
     private  User user = new User();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
 
         getDialog().setTitle("Title!");
         View v = inflater.inflate(R.layout.login_fragment,container,false);
@@ -52,14 +55,19 @@ public class Login extends DialogFragment implements  View.OnClickListener {
         switch (v.getId())
         {
             case R.id.sing_in:
-            check();
-            break;
+                try {
+                    check();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
 
     }
 
-    public void check()
-    {
+    public void check() throws UnsupportedEncodingException, JSONException {
         user.setEmail(email.getText().toString());
         user.setName(name.getText().toString());
         user.setPassword(password.getText().toString());
@@ -68,21 +76,37 @@ public class Login extends DialogFragment implements  View.OnClickListener {
         {
             if(user.getPassword()!=null&&user.getName()!=null&&user.getEmail()!=null&&user.getPasswordConfirm()!=null)
             {
-                WebClient.callCreateNewUser(user , new WebClientListener<String>() {
+//                WebClient.callCreateNewUser(user , new WebClientListener<String>() {
+//                    @Override
+//                    public void onResponse(String token) {
+//                        if(token==null) {
+//                            Log.d("res","NULL");
+//
+//                        }
+//                        else{
+//                            String s=token;
+//                            Intent intent = new Intent(getActivity(), CreateShop.class);
+//                            intent.putExtra(Constants.BUNDLE_KEY_CUR_FRAGMENT,s);
+//                            startActivity(intent);}
+//
+//                    }
+//                });
+
+                VolleyWebClient.callCreateNewUser(user, new WebClientListener<String>() {
                     @Override
                     public void onResponse(String token) {
-                        if(token==null) {
-                            Log.d("res","NULL");
+                        if (token == null) {
+                            Log.d("res", "NULL");
 
-                        }
-                        else{
-                            String s=token;
+                        } else {
+                            String s = token;
                             Intent intent = new Intent(getActivity(), CreateShop.class);
-                            intent.putExtra(Constants.BUNDLE_KEY_CUR_FRAGMENT,s);
-                            startActivity(intent);}
+                            intent.putExtra(Constants.BUNDLE_KEY_CUR_FRAGMENT, s);
+                            startActivity(intent);
+                        }
 
                     }
-                });
+                }, getActivity());
 
 
             }

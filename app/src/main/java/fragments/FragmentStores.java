@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +23,15 @@ import  android.support.v4.app.Fragment;
 
 import db.DBAdapter;
 import web_requests.ControllerForProduct;
+import web_requests.VolleyWebClient;
 import web_requests.WebClient;
 import helper_classes.Constants;
 import helper_classes.ListProduct;
 
 import model.Product;
 import com.example.fevzi.storeslist.R;
+
+import org.json.JSONException;
 
 import activities.DescriptionActivity;
 
@@ -68,7 +72,14 @@ public class FragmentStores extends Fragment implements ListProduct {
 
         setList(dbAdapter.getAllProducts());
 
-        WebClient.callGetProducts(1,new ControllerForProduct(getActivity(),this));
+   //     WebClient.callGetProducts(1,new ControllerForProduct(getActivity(),this));
+        try {
+            VolleyWebClient.callGetProducts(1,new ControllerForProduct(getActivity(),this),getActivity());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         //setList(dbAdapter.getAllProducts());
 

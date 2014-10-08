@@ -1,5 +1,7 @@
 package web_requests.parameters;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +17,7 @@ import model.ResultProduct;
  * Created by fevzi on 03.10.14.
  */
 public  class GetProductsListParam extends Parameter<ResultProduct> {
+
     int page;
      public GetProductsListParam( int page)
      {
@@ -24,7 +27,6 @@ public  class GetProductsListParam extends Parameter<ResultProduct> {
     public ResultProduct parse(String s) throws JSONException {
 
         ArrayList<Product> products = new ArrayList<Product>();
-
 
         ResultProduct res_products =  new ResultProduct();
 
