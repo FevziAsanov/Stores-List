@@ -21,7 +21,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import activities.DescriptionActivity;
@@ -34,11 +33,11 @@ public class Maps extends Fragment implements ListProduct {
     private SupportMapFragment mapFragment;
 
     private GoogleMap map;
-    private Marker [] marker;
+    private Marker [] markers;
     private ArrayList<Product> products ;
     private DBAdapter sqlHelper;
-    private ArrayList<HashMap<Integer,Integer>> hashMaps = new ArrayList<HashMap<Integer, Integer>>();
-   private static boolean h = false;
+    private  int productID[];
+    private static boolean h = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,15 +67,17 @@ public class Maps extends Fragment implements ListProduct {
     }
 
     public void setMarkers() {
-            marker = new Marker[products.size()];
+        markers = new Marker[products.size()];
+        productID = new int [products.size()+1];
+
+
         for (int i = 0; i <products.size() ; i++) {
 
-            marker[i]= map.addMarker(new MarkerOptions().position(new LatLng(products.get(i).getLat(), products.get(i).getLng())).title(products.get(i).getTitle()));
+            markers[i]= map.addMarker(new MarkerOptions().position(new LatLng(products.get(i).getLat(), products.get(i).getLng())).title(products.get(i).getTitle()));
 
-            HashMap<Integer,Integer> hashMap = new HashMap<Integer, Integer>();
-            hashMap.put(Integer.getInteger(marker[i].getId()), products.get(i).getId());
+            productID[i]  =products.get(i).getId();
 
-            hashMaps.add(hashMap);
+
         }
 
 
@@ -109,9 +110,10 @@ public class Maps extends Fragment implements ListProduct {
                                 @Override
                                 public void onInfoWindowClick(Marker marker) {
 
-                                    transToDescActivity();
+                                    transToDescActivity(marker);
 
                                 }
+
                             });
                         }
                     });
@@ -125,14 +127,15 @@ public class Maps extends Fragment implements ListProduct {
 
     }
 
-public void  transToDescActivity()
+public void  transToDescActivity(Marker marker)
 {
-    for (int i = 0; i <hashMaps.size() ; i++) {
 
-        if(hashMaps.get(i).get(Integer.getInteger(marker[i].getId()))!=null)
-        {
-            Intent intent = new Intent(getActivity(), DescriptionActivity.class);
-            int id = products.get(i).getId();
+    Intent intent = new Intent(getActivity(), DescriptionActivity.class);
+    for(int i=0;i<products.size();i++)
+    {
+        if(markers[i].getId().equals( marker.getId())) {
+            int id = productID[i];
+
             intent.putExtra(Constants.NAME, id);
             startActivity(intent);
             break;

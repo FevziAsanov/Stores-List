@@ -93,7 +93,6 @@ public class VolleyWebClient {
 
     }
 
-
     public static int getRequest(Parameter p) throws JSONException, UnsupportedEncodingException {
         switch (p.getMethod()) {
             case Get:
